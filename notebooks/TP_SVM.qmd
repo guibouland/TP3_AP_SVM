@@ -1,6 +1,43 @@
 ---
-title: "oiof"
+title: "TP3 - Support Vector Machines"
 author: "Guillaume BOULAND"
-output: pdf
+format: 
+        pdf: 
+            code-fold: true
+jupyter: python3
 ---
+
+```{python}
+#| echo: false
+#| include: false
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
+
+import sys
+from pathlib import Path
+
+from sklearn import svm
+from sklearn import datasets
+from sklearn.utils import shuffle
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.datasets import fetch_lfw_people
+from sklearn.decomposition import PCA
+from time import time
+
+scaler = StandardScaler()
+
+import warnings
+warnings.filterwarnings("ignore")
+
+plt.style.use('ggplot')
+
+# Ajout du chemin du dossier "src" où se trouve le fichier svm_gui.py
+sys.path.append(str(Path("..") / "src"))
+
+# Importation de la classe (remplace "NomDeLaClasse" par le nom de la classe réelle)
+from svm_gui import *
+from svm_source import *
+```
 
