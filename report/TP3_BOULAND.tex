@@ -17,6 +17,8 @@
 \usepackage{hyperref}
 \usepackage{tabularx}
 \usepackage{subcaption}
+\usepackage{diagbox}
+
 %\newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 \usepackage[inkscapeformat=png]{svg}
@@ -234,7 +236,7 @@ Dans cette question, nous allons chercher à montrer l'influence de ce paramètr
     \label{fig:q4_score_erreur}
 \end{figure}
 
-Comme nous pouvons l'observer dans la Figure~\ref{fig:q4_score_erreur} ci-dessus, la meilleure valeur du paramètre $C$ de régularisation est $10¨{-3}$ puisque la valeur de score d'apprentissage est de $1$, et celle d'erreur d'apprentissage est de $0$.\\
+Comme nous pouvons l'observer dans la Figure~\ref{fig:q4_score_erreur} ci-dessus, la meilleure valeur du paramètre $C$ de régularisation est $10^{-3}$ puisque la valeur de score d'apprentissage est de $1$, et celle d'erreur d'apprentissage est de $0$.\\
 
 Nous allons donc utiliser cette valeur pour recréer un classifieur linéaire, l'entraîner avec les données d'apprentissage, et le tester sur les données de test, en prédisant les valeurs $y$ de test à l'aide des valeurs $X$ de test et du modèle entraîné sur les données d'apprentissage.\\
 Nous obtenons ainsi une précision de $0.9$, avec un niveau de chance (si le modèle ne fait rien de particulier pour apprendre ou généraliser, il se contente de prédire la classe majoritaire) de $0.62$. Nous avons donc une prédiction nettement meilleure que l'aléatoire, ce qui signifie que notre modèle a bien appris à classifier les données correctement ($90\%$ de précision).\\
@@ -263,12 +265,33 @@ De plus, nous pouvons aussi regarder une représentation des coefficients qui on
 
 \section{Question 5}
 
-Nous allons à présent rajouter des variables de bruit dans notre modèle afin d'observer dans quelle mesure la performance de celui-ci est impactée. Tout d'abord, à l'aide de la fonction \texttt{run\_svm\_cv}, nous allons utiliser la validation croisée. Nous obtenons alors, sans ajouter de variables de nuisance, un score de généralisation (de test) égal à $0.9$ (moyenne sur 10 simulations). Lorsque l'on rajoute des variables de nuisance, nous obtenons un score de généralisation égal à $0.54$. La performance de notre modèle chute drastiquement.
+Nous allons à présent rajouter des variables de bruit dans notre modèle afin d'observer dans quelle mesure la performance de celui-ci est impactée. Tout d'abord, à l'aide de la fonction \texttt{run\_svm\_cv}, nous allons utiliser la validation croisée. Nous obtenons alors, sans ajouter de variables de nuisance, un score de généralisation (de test) égal à $0.9$ (moyenne sur 10 simulations). Lorsque l'on rajoute des variables de nuisance, nous obtenons un score de généralisation égal à $0.54$. La performance de notre modèle chute drastiquement. Nous observons aussi un grand écart entre les deux score, significatif d'un sur-ajustement caractérisé par l'ajout des variables de bruit.
 
 \section{Question 6}
 
 Nous pouvons améliorer cette prédiction à l'aide d'une réduction de dimensions en utilisant l'objet \\ \texttt{sklearn.decomposition.PCA(n\_components, svd\_solver='randomized')}. On remarque qu'en faisant varier la valeur de \texttt{n\_components}, le temps d'exécution peut changer du tout au tout. En effet, pour $n\_components = 100$, le code s'exécute en 1 seconde, mais quand on diminue la valeur de ce paramètre, le temps d'exécution augmente. Cela est dû au fait que ce paramètre représente le nombre de composantes que l'on souhaite garder après la réduction de dimension.\\
-Pour $n\_components = 80$, nous trouvons un score de généralisation égal à $0.58$. Nous pouvons remarquer que l'amélioration reste relative, et qu'il faudrait baisser le nombre de dimensions à conserver pour augmenter ce score.
+Pour $n\_components = 80$, nous trouvons un score de généralisation égal à $0.58$. Nous pouvons remarquer que l'amélioration reste relative, et qu'il faudrait baisser le nombre de dimensions à conserver pour augmenter ce score. Pour ces valeurs de composantes à conserver dans  l'ACP nous observons toujours du sur-ajustement mais pour des valeurs plus basses (que nous n'avons pas effectuées mais un camarade l'a fait (Quentin FESTOR)), il y a une amélioration. En effet, nous obtenons les valeurs suivantes : 
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|c|c|c|}
+    \hline
+        \backslashbox{$n\_components$}{$Scores$} & Apprentissage & Test \\
+        \hline
+        200 & 0.9263157894736842& 0.5210526315789473\\
+        120&1.0& 0.5263157894736842 \\
+        80&0.7473684210526316& 0.48947368421052634 \\
+        25&0.6947368421052632& 0.5842105263157895 \\
+        20&0.6578947368421053& 0.5894736842105263 \\
+        15& 0.6526315789473685& 0.5894736842105263 \\
+        10&0.6052631578947368& 0.6368421052631579 \\
+        5&0.6052631578947368& 0.6157894736842106\\
+        \hline
+    \end{tabular}
+    \caption{Scores d'appretissage et de test selon le nombre de dimensions conservées ans la réduction de dimensions}
+    \label{tab:vals}
+\end{table}
 
+Ce code a été réalisé en 11 heures (sur une seule machine). Nous pouvons observer dans le Tableau~\ref{tab:vals} que plus la valeurs de $n\_components$ diminue et plus le score de test augmente, et l'écart entre les deux scores diminue, ce qui signifie qu'on corrige le sur-ajustement par la réduction de dimensions.
 
 \end{document}
